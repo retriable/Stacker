@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIViewController (StackerPublic)
 
+@property (readonly,weak)Stacker *stacker_stacker;
 @property (nonatomic,strong,nullable) StackerTransition *stacker_transition;
 
 @end

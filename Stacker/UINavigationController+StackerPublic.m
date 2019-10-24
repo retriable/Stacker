@@ -69,6 +69,13 @@
     if (completion) completion(YES);
 }
 
+- (NSArray*)stacker_original_viewControllers{
+    if (self.stacker_stacker){
+        return [self.stacker_stacker viewControllers];
+    }
+    return [self stacker_original_viewControllers];
+}
+
 - (void)pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers{
     [self pushViewControllers:viewControllers animated:NO];
 }
@@ -205,6 +212,7 @@
 }
 
 + (void)load{
+    [self stacker_swizzleinstanceWithOrignalMethod:@selector(viewControllers) alteredMethod:@selector(stacker_original_viewControllers)];
     [self stacker_swizzleinstanceWithOrignalMethod:@selector(navigationBar:shouldPopItem:) alteredMethod:@selector(stacker_original_navigationBar:shouldPopItem:)];
     [self stacker_swizzleinstanceWithOrignalMethod:@selector(setViewControllers:) alteredMethod:@selector(stacker_original_setViewControllers:)];
     [self stacker_swizzleinstanceWithOrignalMethod:@selector(setViewControllers:animated:) alteredMethod:@selector(stacker_original_setViewControllers:animated:)];

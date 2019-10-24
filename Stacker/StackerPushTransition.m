@@ -55,7 +55,7 @@
         CATransform3D toTransform = CATransform3DMakeTranslation(CGRectGetWidth(self.stacker.view.bounds), 0, 0);
         toView.layer.transform=toTransform;
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-            view.alpha=0.5;
+            view.alpha=0.75;
             toView.layer.transform=CATransform3DIdentity;
             fromView.layer.transform=CATransform3DScale(fromView.layer.transform, 0.985, 0.985, 1);
         } completion:^(BOOL finished) {
@@ -71,7 +71,7 @@
     }else{
         enableShadow(fromView);
         cover(toView);
-        view.alpha=0.5;
+        view.alpha=0.75;
         CATransform3D fromTransform = fromView.layer.transform;
         CATransform3D toTransform = toView.layer.transform;
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear animations:^{

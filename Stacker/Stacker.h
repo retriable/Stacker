@@ -27,9 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nullable, nonatomic,readonly,strong) UIViewController *topViewController;
 
-@property(nonatomic,copy) NSArray<__kindof UIViewController *> *viewControllers;
-
-@property(nonatomic,strong) StackerTransition *defaultTransition;
+@property(nullable, nonatomic,readonly,strong) NSArray<__kindof UIViewController *> *viewControllers;
 
 - (instancetype)initWithNavigationControllerClass:(nullable Class)navigationControllerClass NS_SWIFT_NAME(init(navigationControllerClass:));
 

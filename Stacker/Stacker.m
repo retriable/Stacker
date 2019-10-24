@@ -46,7 +46,7 @@
 }
 
 - (instancetype)initWithRootViewController:(__kindof UIViewController *)rootViewController{
-    self=[super init];
+    self=[self init];
     if (!self) return nil;
     [self pushViewController:rootViewController animated:NO];
     return self;
@@ -225,7 +225,7 @@
 - (void)_pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers increasing:(BOOL)increasing animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
     __weak typeof(self) weakSelf=self;
     __block BOOL cancelled = NO;
-    dispatch_group_t group=dispatch_group_create();
+    dispatch_group_t group = animated?dispatch_group_create():NULL;
     NSMutableArray <void(^)(void)> *willCancelBlocks=[NSMutableArray array];
     NSMutableArray <void(^)(void)> *didCancelBlocks=[NSMutableArray array];
     NSMutableArray <void(^)(void)> *didFinishBlocks=[NSMutableArray array];
@@ -386,21 +386,25 @@
             }
         }
     }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (cancelled){
-                didCancelBlock();
-            }else{
-                didFinishBlock();
-            }
+    if (animated){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (cancelled){
+                    didCancelBlock();
+                }else{
+                    didFinishBlock();
+                }
+            });
         });
-    });
+    }else{
+        didFinishBlock();
+    }
 }
 
 - (nullable NSArray<__kindof UIViewController *> *)_popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
     __weak typeof(self) weakSelf=self;
-    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_t group = animated?dispatch_group_create():NULL;
     __block BOOL cancelled = NO;
     NSMutableArray <void(^)(void)> *willCancelBlocks=[NSMutableArray array];
     NSMutableArray <void(^)(void)> *didCancelBlocks=[NSMutableArray array];
@@ -440,6 +444,19 @@
             UIViewController *nextViewController=self.navigationControllers[i+1];
             visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO;
         }
+        if (visableFlags[i]){
+            newMasterViewController=[navigationControllers[i] topViewController];
+        }
+    }
+    {
+        UIViewController *oldMasterViewController=self.masterViewController;
+        self.masterViewController=newMasterViewController;
+        [willCancelBlocks addObject:^{
+            __strong typeof(weakSelf) self=weakSelf;
+            self.masterViewController=oldMasterViewController;
+        }];
+    }
+    for (NSInteger i=navigationControllers.count-1;i>=0;i--){
         __weak UINavigationController *navigationController=navigationControllers[i];
         if (visableFlags[i]) {
             if (!navigationController.parentViewController){
@@ -469,7 +486,6 @@
                     if(appeared) [navigationController endAppearanceTransition];
                 }];
             }
-            newMasterViewController=[navigationController topViewController];
         }else{
             if (navigationController.parentViewController){
                 [navigationController beginAppearanceTransition:NO animated:animated];
@@ -532,24 +548,20 @@
             }
         }
     }
-    {
-        UIViewController *oldMasterViewController=self.masterViewController;
-        self.masterViewController=newMasterViewController;
-        [willCancelBlocks addObject:^{
-            __strong typeof(weakSelf) self=weakSelf;
-            self.masterViewController=oldMasterViewController;
-        }];
-    }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (cancelled){
-                didCancelBlock();
-            }else{
-                didFinishBlock();
-            }
+    if (animated){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (cancelled){
+                    didCancelBlock();
+                }else{
+                    didFinishBlock();
+                }
+            });
         });
-    });
+    }else{
+        didFinishBlock();
+    }
     return popedViewControllers;
 }
 
@@ -687,7 +699,6 @@
     if (_masterViewController==masterViewController) return;
     _masterViewController=masterViewController;
     [self setNeedsStatusBarAppearanceUpdate];
-    [UIViewController attemptRotationToDeviceOrientation];
 }
 
 - (BOOL)shouldAutorotate{
