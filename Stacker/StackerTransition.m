@@ -44,6 +44,10 @@
 }
 
 
+- (void)restoreTransition{
+    
+}
+
 - (BOOL)interactionCancelled{
     return self.interactionCancelledBlock();
 }

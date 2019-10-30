@@ -13,6 +13,8 @@
 
 @property (nonatomic,strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic,assign) CGPoint                startPoint;
+@property (nonatomic,assign) CATransform3D          fromTransform;
+@property (nonatomic,assign) CATransform3D          toTransform;
 
 @end
 
@@ -32,7 +34,7 @@
     __block UIView *view = nil;
     void(^cover)(UIView *v)=^(UIView *v){
         view = [[UIView alloc]init];
-        view.backgroundColor=[UIColor colorWithWhite:0 alpha:0.5];
+        view.backgroundColor=[UIColor blackColor];
         view.frame=v.bounds;
         [v addSubview:view];
     };
@@ -51,44 +53,39 @@
         enableShadow(toView);
         cover(fromView);
         view.alpha=0;
-        CATransform3D fromTransform = fromView.layer.transform;
-        CATransform3D toTransform = CATransform3DMakeTranslation(CGRectGetWidth(self.stacker.view.bounds), 0, 0);
-        toView.layer.transform=toTransform;
+        self.fromTransform = fromView.layer.transform;
+        self.toTransform = CATransform3DMakeTranslation(CGRectGetWidth(self.stacker.view.bounds), 0, 0);
+        toView.layer.transform=self.toTransform;
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-            view.alpha=0.75;
+            view.alpha=0.5;
             toView.layer.transform=CATransform3DIdentity;
             fromView.layer.transform=CATransform3DScale(fromView.layer.transform, 0.985, 0.985, 1);
         } completion:^(BOOL finished) {
-            BOOL completed =!self.interactionCancelled && finished;
-            if (!completed){
-                toView.layer.transform = toTransform;
-                fromView.layer.transform = fromTransform;
-            }
             uncover(fromView);
             disableShadow(toView);
-            [self complete:completed];
+            [self complete:!self.interactionCancelled && finished];
         }];
     }else{
         enableShadow(fromView);
         cover(toView);
-        view.alpha=0.75;
-        CATransform3D fromTransform = fromView.layer.transform;
-        CATransform3D toTransform = toView.layer.transform;
+        view.alpha=0.5;
+        self.fromTransform = fromView.layer.transform;
+        self.toTransform = toView.layer.transform;
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             view.alpha=0;
             fromView.layer.transform=CATransform3DTranslate(fromView.layer.transform, CGRectGetWidth(self.stacker.view.bounds), 0, 0);
             toView.layer.transform=CATransform3DIdentity;
         } completion:^(BOOL finished) {
-            BOOL completed =!self.interactionCancelled && finished;
-            if (!completed){
-                toView.layer.transform = toTransform;
-                fromView.layer.transform = fromTransform;
-            }
             uncover(toView);
             disableShadow(fromView);
-            [self complete:completed];
+            [self complete:!self.interactionCancelled && finished];
         }];
     }
+}
+
+- (void)restoreTransition{
+    self.fromViewController.view.layer.transform=self.fromTransform;
+    self.toViewController.view.layer.transform=self.toTransform;
 }
 
 - (void)pan:(UIPanGestureRecognizer*)gestureRecognizer{

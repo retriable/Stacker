@@ -28,7 +28,7 @@
         self.stacker_pop(self);
         return NO;
     }
-    if (!self.stacker_stacker){
+    if (self.stacker_stacker){
         [self.stacker_stacker popViewControllerAnimated:YES];
         return NO;
     }
@@ -53,7 +53,7 @@
 }
 
 - (void)pushViewController:(__kindof UIViewController *)viewController{
-    [self pushViewController:viewController animated:NO];
+    [self pushViewController:viewController animated:YES];
 }
 
 - (void)stacker_original_pushViewController:(__kindof UIViewController *)viewController animated:(BOOL)animated{
@@ -77,7 +77,7 @@
 }
 
 - (void)pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers{
-    [self pushViewControllers:viewControllers animated:NO];
+    [self pushViewControllers:viewControllers animated:YES];
 }
 
 - (void)pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated{
@@ -94,14 +94,14 @@
         return;
     }
     for (NSInteger i=0;i<viewControllers.count-1;i++){
-        [self stacker_original_pushViewController:viewControllers[i] animated:NO];
+        [self stacker_original_pushViewController:viewControllers[i] animated:animated];
     }
     [self stacker_original_pushViewController:viewControllers.lastObject animated:animated];
     if (completion) completion(YES);
 }
 
 - (nullable __kindof UIViewController *)popViewController{
-    return [self popViewControllerAnimated:NO];
+    return [self popViewControllerAnimated:YES];
 }
 
 - (nullable __kindof UIViewController *)stacker_original_popViewControllerAnimated:(BOOL)animated{
@@ -118,7 +118,7 @@
 }
 
 - (nullable NSArray<__kindof UIViewController *> *)popToRootViewController{
-    return [self popToRootViewControllerAnimated:NO];
+    return [self popToRootViewControllerAnimated:YES];
 }
 
 - (nullable NSArray<__kindof UIViewController *> *)stacker_original_popToRootViewControllerAnimated:(BOOL)animated{
@@ -135,7 +135,7 @@
 }
 
 - (nullable NSArray<__kindof UIViewController *> *)popToViewController:(UIViewController *)viewController{
-    return [self popToViewController:viewController animated:NO];
+    return [self popToViewController:viewController animated:YES];
 }
 
 - (nullable NSArray<__kindof UIViewController *> *)stacker_original_popToViewController:(UIViewController *)viewController animated:(BOOL)animated{

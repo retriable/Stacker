@@ -30,6 +30,14 @@
     }): nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (void)setStacker_master:(BOOL)stacker_master{
+    objc_setAssociatedObject(self, @selector(stacker_master), @(stacker_master), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)stacker_master{
+    return [objc_getAssociatedObject(self, @selector(stacker_master)) boolValue];
+}
+
 - (void)setStacker_transition:(StackerTransition*)stacker_transition{
     objc_setAssociatedObject(self, @selector(stacker_transition), stacker_transition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }

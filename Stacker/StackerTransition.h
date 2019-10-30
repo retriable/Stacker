@@ -19,19 +19,21 @@ typedef NS_ENUM(NSInteger,StackerTransitionStyle) {
 
 @interface StackerTransition : NSObject
 
-@property (nonatomic,assign) CFTimeInterval           duration;
-@property (nonatomic,assign) StackerTransitionStyle   style;
-@property (readonly,weak   ) Stacker                  *stacker;
-@property (readonly,weak   ) UIViewController         *viewController;
-@property (readonly,weak   ) UIViewController         *fromViewController;
-@property (readonly,weak   ) UIViewController         *toViewController;
-@property (readonly,assign ) BOOL                     interactionCancelled;
+@property (nonatomic,assign      ) CFTimeInterval         duration;
+@property (nonatomic,assign      ) StackerTransitionStyle style;
+@property (readonly,weak,nullable) Stacker                *stacker;
+@property (readonly,weak         ) UIViewController       *viewController;
+@property (readonly,weak,nullable) UIViewController       *fromViewController;
+@property (readonly,weak         ) UIViewController       *toViewController;
+@property (readonly,assign       ) BOOL                   interactionCancelled;
 
 - (void)complete:(BOOL)finished;
 
 /// start transition
 /// @param duration duration
 - (void)startTransition:(CFTimeInterval)duration;
+
+- (void)restoreTransition;
 
 #pragma mark
 #pragma mark -- percent driven interaction
