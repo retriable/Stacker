@@ -9,9 +9,9 @@
 #import <objc/runtime.h>
 
 #import "NSObject+StackerPrivate.h"
-#import "Stacker.h"
-#import "StackerPushTransition.h"
+#import "StackerDefaultTransition.h"
 #import "UIViewController+StackerPrivate.h"
+#import "UIViewController+StackerPublic.h"
 
 @implementation UIViewController (StackerPrivate)
 
@@ -38,18 +38,31 @@
     return [objc_getAssociatedObject(self, @selector(stacker_master)) boolValue];
 }
 
+- (void)setStacker_style:(StackerTransitionStyle)stacker_style{
+    objc_setAssociatedObject(self, @selector(stacker_style), @(stacker_style), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (StackerTransitionStyle)stacker_style{
+    id style = objc_getAssociatedObject(self, @selector(stacker_style));
+    if (style) return [style integerValue];
+    if ([self isKindOfClass:UINavigationController.class]){
+        return [[(UINavigationController*)self topViewController] stacker_style];
+    }
+    return [objc_getAssociatedObject(self, @selector(stacker_style)) integerValue];
+}
+
 - (void)setStacker_transition:(StackerTransition*)stacker_transition{
     objc_setAssociatedObject(self, @selector(stacker_transition), stacker_transition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (StackerTransition*)stacker_transition{
-    StackerTransition* transition = objc_getAssociatedObject(self, @selector(stacker_transition));
+    StackerTransition *transition = objc_getAssociatedObject(self, @selector(stacker_transition));
     if (transition) return transition;
     if ([self isKindOfClass:UINavigationController.class]){
         transition=[(UINavigationController*)self topViewController].stacker_transition;
         if (transition) return transition;
     }
-    transition=[[StackerPushTransition alloc]init];
+    transition=[[StackerDefaultTransition alloc]init];
     self.stacker_transition=transition;
     return transition;
 }

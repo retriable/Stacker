@@ -35,7 +35,21 @@
     self=[super initWithFrame:frame];
     if (!self) return nil;
     [self.contentView addSubview:self.label];
+    self.label.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentView addConstraints:@[
+        [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.label attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
+        [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.label attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],
+    ]];
     return self;
+}
+
+- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes{
+    UICollectionViewLayoutAttributes *attributes = [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
+    CGRect frame = [self.label.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:(NSStringDrawingUsesLineFragmentOrigin) attributes:[NSDictionary dictionaryWithObjectsAndKeys:self.label.font,NSFontAttributeName, nil] context:nil];
+    frame.size.width += 28;
+    frame.size.height += 16;
+    attributes.frame = frame;
+    return attributes;
 }
 
 - (UILabel*)label{
@@ -44,10 +58,6 @@
     return _label;
 }
 
-- (void)layoutSubviews{
-    [super layoutSubviews];
-    self.label.frame=self.contentView.bounds;
-}
 @end
 
 @interface ViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
@@ -98,7 +108,7 @@
     self.Models=@[
         ({
             Model *v=[[Model alloc]init];
-            v.title=@"pop 1";
+            v.title=@"pop";
             v.block = ^{
                 [weakSelf.navigationController popViewControllerAnimated:YES];
             };
@@ -106,256 +116,54 @@
         }),
         ({
             Model *v=[[Model alloc]init];
-            v.title=@"pop 2";
-            v.block=^{
-                NSInteger i=weakSelf.navigationController.viewControllers.count-3;
-                if (i>=0){
-                    [weakSelf.navigationController popToViewController:weakSelf.navigationController.viewControllers[i] animated:YES];
-                }
-            };
-            v;
-        }),
-        ({
-            Model *v=[[Model alloc]init];
-            v.title=@"ppush 1";
+            v.title=@"push 1";
             v.block=^{
                 [weakSelf.navigationController pushViewController:({
                     ViewController *v= [[ViewController alloc]init];
                     v.title=[@(weakSelf.title.integerValue+1) description];
-                    v.stacker_transition=[[StackerPushTransition alloc]init];
+                    if (weakSelf.title.integerValue%2!=0){
+                        StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
+                        transition.percentParallax = 0.25;
+                        v.stacker_style = StackerTransitionStyleOverCurrentContext;
+                    }
                     v;
                 }) animated:YES];
             };
             v;
         }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"lpush 1";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewController:({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPushTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        }) animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"ppush 2";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewControllers:@[({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPushTransition alloc]init];
-                            v;
-                        }),({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+2) description];
-                            v.stacker_transition=[[StackerPushTransition alloc]init];
-                            v;
-                        })] animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"lpush 2";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewControllers:@[({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPushTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        }),({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+2) description];
-                            v.stacker_transition=[[StackerPushTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        })] animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"plpush 2";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewControllers:@[({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPushTransition alloc]init];
-                            v;
-                        }),({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+2) description];
-                            v.stacker_transition=[[StackerPushTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        })] animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"lppush 2";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewControllers:@[({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPushTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        }),({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+2) description];
-                            v.stacker_transition=[[StackerPushTransition alloc]init];
-                            v;
-                        })] animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"ppresent 1";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewController:({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v;
-                        }) animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"lpresent 1";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewController:({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        }) animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"ppresent 2";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewControllers:@[({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v;
-                        }),({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+2) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v;
-                        })] animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"lpresent 2";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewControllers:@[({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        }),({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+2) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        })] animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"ppresent 2";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewControllers:@[({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v;
-                        }),({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+2) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        })] animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"lppresent 2";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewControllers:@[({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v.orientation=UIInterfaceOrientationLandscapeRight;
-                            v;
-                        }),({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+2) description];
-                            v.stacker_transition=[[StackerPresentTransition alloc]init];
-                            v;
-                        })] animated:YES];
-                    };
-                    v;
-                }),
-                ({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"l push present 2";
-                    v.block=^{
-                        [weakSelf.navigationController pushViewControllers:@[({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+1) description];
-                            v.stacker_transition=({
-                                StackerPushTransition *v=[[StackerPushTransition alloc]init];
-                                v.style=StackerTransitionStyleOverCurrentContext;
-                                v;
-                            });
-                            v;
-                        }),({
-                            ViewController *v= [[ViewController alloc]init];
-                            v.title=[@(weakSelf.title.integerValue+2) description];
-                                v.stacker_transition=({
-                                                StackerPresentTransition *v=[[StackerPresentTransition alloc]init];
-                                                v.style=StackerTransitionStyleOverCurrentContext;
-                                                v;
-                                            });
-                            v;
-                        })] animated:YES];
-                    };
+        ({
+            Model *v=[[Model alloc]init];
+            v.title=@"push 2";
+            v.block=^{
+                [weakSelf.navigationController pushViewControllers:@[({
+                    ViewController *v= [[ViewController alloc]init];
+                    v.title=[@(weakSelf.title.integerValue+1) description];
+                    if (weakSelf.title.integerValue%2!=0){
+                        StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
+                        transition.percentParallax = 0.25;
+                        v.stacker_style = StackerTransitionStyleOverCurrentContext;
+                    }
                     v;
                 }),({
-                    Model *v=[[Model alloc]init];
-                    v.title=@"default present";
+                    ViewController *v= [[ViewController alloc]init];
+                    v.title=[@(weakSelf.title.integerValue+2) description];
+                    if (weakSelf.title.integerValue%2!=0){
+                        StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
+                        transition.percentParallax = 0.25;
+                        v.stacker_style = StackerTransitionStyleOverCurrentContext;
+                    }
                     v;
-                })
+                })] animated:YES];
+            };
+            v;
+        })
     ];
     UICollectionView  *collectionView=({
         UICollectionViewFlowLayout *layout=({
             UICollectionViewFlowLayout *v=[[UICollectionViewFlowLayout alloc]init];
-            v.itemSize=CGSizeMake(200, 44);
+            v.estimatedItemSize=CGSizeMake(200, 200);
+            v.minimumLineSpacing = 20;
+            v.minimumInteritemSpacing = 20;
             v;
         });
         UICollectionView *v=[[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
@@ -379,12 +187,12 @@
         v.textAlignment=NSTextAlignmentCenter;
         v.text= @"口";
         CABasicAnimation *basicAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-         basicAnimation.byValue = [NSNumber numberWithFloat:M_PI*2];
-         basicAnimation.speed=3;
-         basicAnimation.duration = 2;
-         basicAnimation.repeatCount=HUGE_VALF;
-         basicAnimation.removedOnCompletion = NO;
-         [v.layer addAnimation:basicAnimation forKey:@"KCBasicAnimation_Rotation"];
+        basicAnimation.byValue = [NSNumber numberWithFloat:M_PI*2];
+        basicAnimation.speed=3;
+        basicAnimation.duration = 2;
+        basicAnimation.repeatCount=HUGE_VALF;
+        basicAnimation.removedOnCompletion = NO;
+        [v.layer addAnimation:basicAnimation forKey:@"KCBasicAnimation_Rotation"];
         v;
     });
     [self.view addSubview:indicatorView];

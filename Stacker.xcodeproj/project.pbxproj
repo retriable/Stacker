@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5123B45423614D4900C90B99 /* Stacker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5123B45323614D4800C90B99 /* Stacker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5123B45723614DA800C90B99 /* StackerPresentTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 5123B45523614DA800C90B99 /* StackerPresentTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5123B45823614DA800C90B99 /* StackerPresentTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5123B45623614DA800C90B99 /* StackerPresentTransition.m */; };
 		51CAA354235EEB9700720FB8 /* UIViewController+StackerPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 51CAA342235EEB9500720FB8 /* UIViewController+StackerPrivate.m */; };
 		51CAA355235EEB9700720FB8 /* StackerTransition+StackerPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 51CAA343235EEB9500720FB8 /* StackerTransition+StackerPrivate.h */; };
 		51CAA357235EEB9700720FB8 /* UIViewController+StackerPublic.h in Headers */ = {isa = PBXBuildFile; fileRef = 51CAA345235EEB9600720FB8 /* UIViewController+StackerPublic.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -19,12 +17,9 @@
 		51CAA35B235EEB9700720FB8 /* NSObject+StackerPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 51CAA349235EEB9600720FB8 /* NSObject+StackerPrivate.m */; };
 		51CAA35C235EEB9700720FB8 /* UIViewController+StackerPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 51CAA34A235EEB9600720FB8 /* UIViewController+StackerPrivate.h */; };
 		51CAA35D235EEB9700720FB8 /* Stacker.m in Sources */ = {isa = PBXBuildFile; fileRef = 51CAA34B235EEB9600720FB8 /* Stacker.m */; };
-		51CAA35E235EEB9700720FB8 /* StackerPushTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 51CAA34C235EEB9600720FB8 /* StackerPushTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		51CAA361235EEB9700720FB8 /* NSObject+StackerPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 51CAA34F235EEB9600720FB8 /* NSObject+StackerPrivate.h */; };
 		51CAA363235EEB9700720FB8 /* StackerTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 51CAA351235EEB9600720FB8 /* StackerTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		51CAA364235EEB9700720FB8 /* Stacker+StackerPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 51CAA352235EEB9600720FB8 /* Stacker+StackerPrivate.h */; };
 		51CAA365235EEB9700720FB8 /* UINavigationController+StackerPublic.m in Sources */ = {isa = PBXBuildFile; fileRef = 51CAA353235EEB9700720FB8 /* UINavigationController+StackerPublic.m */; };
-		51CAA366235EEDA000720FB8 /* StackerPushTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 51CAA350235EEB9600720FB8 /* StackerPushTransition.m */; };
 		51CAA36F2360551B00720FB8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 51CAA36E2360551B00720FB8 /* AppDelegate.m */; };
 		51CAA3752360551B00720FB8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 51CAA3742360551B00720FB8 /* ViewController.m */; };
 		51CAA3782360551B00720FB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51CAA3762360551B00720FB8 /* Main.storyboard */; };
@@ -34,6 +29,8 @@
 		51CAA3852360564000720FB8 /* Stacker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51CAA337235EEB6400720FB8 /* Stacker.framework */; };
 		51CAA3862360564000720FB8 /* Stacker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 51CAA337235EEB6400720FB8 /* Stacker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		51CAA38D236056B400720FB8 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 51CAA38C236056B400720FB8 /* RootViewController.m */; };
+		51DD3D2823B210D700443BBA /* StackerDefaultTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 51DD3D2423B20CC000443BBA /* StackerDefaultTransition.m */; };
+		51DD3D3523B304ED00443BBA /* StackerDefaultTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 51DD3D2523B20CC000443BBA /* StackerDefaultTransition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,8 +59,6 @@
 
 /* Begin PBXFileReference section */
 		5123B45323614D4800C90B99 /* Stacker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stacker.h; sourceTree = "<group>"; };
-		5123B45523614DA800C90B99 /* StackerPresentTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackerPresentTransition.h; sourceTree = "<group>"; };
-		5123B45623614DA800C90B99 /* StackerPresentTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackerPresentTransition.m; sourceTree = "<group>"; };
 		51CAA337235EEB6400720FB8 /* Stacker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stacker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		51CAA33B235EEB6400720FB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		51CAA342235EEB9500720FB8 /* UIViewController+StackerPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+StackerPrivate.m"; sourceTree = "<group>"; };
@@ -75,11 +70,8 @@
 		51CAA349235EEB9600720FB8 /* NSObject+StackerPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+StackerPrivate.m"; sourceTree = "<group>"; };
 		51CAA34A235EEB9600720FB8 /* UIViewController+StackerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+StackerPrivate.h"; sourceTree = "<group>"; };
 		51CAA34B235EEB9600720FB8 /* Stacker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stacker.m; sourceTree = "<group>"; };
-		51CAA34C235EEB9600720FB8 /* StackerPushTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackerPushTransition.h; sourceTree = "<group>"; };
 		51CAA34F235EEB9600720FB8 /* NSObject+StackerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+StackerPrivate.h"; sourceTree = "<group>"; };
-		51CAA350235EEB9600720FB8 /* StackerPushTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackerPushTransition.m; sourceTree = "<group>"; };
 		51CAA351235EEB9600720FB8 /* StackerTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackerTransition.h; sourceTree = "<group>"; };
-		51CAA352235EEB9600720FB8 /* Stacker+StackerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stacker+StackerPrivate.h"; sourceTree = "<group>"; };
 		51CAA353235EEB9700720FB8 /* UINavigationController+StackerPublic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+StackerPublic.m"; sourceTree = "<group>"; };
 		51CAA36B2360551B00720FB8 /* iOS Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		51CAA36D2360551B00720FB8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -93,6 +85,8 @@
 		51CAA37F2360551E00720FB8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		51CAA38B236056B400720FB8 /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		51CAA38C236056B400720FB8 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		51DD3D2423B20CC000443BBA /* StackerDefaultTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackerDefaultTransition.m; sourceTree = "<group>"; };
+		51DD3D2523B20CC000443BBA /* StackerDefaultTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackerDefaultTransition.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,24 +130,21 @@
 		51CAA339235EEB6400720FB8 /* Stacker */ = {
 			isa = PBXGroup;
 			children = (
-				51CAA34F235EEB9600720FB8 /* NSObject+StackerPrivate.h */,
-				51CAA349235EEB9600720FB8 /* NSObject+StackerPrivate.m */,
 				5123B45323614D4800C90B99 /* Stacker.h */,
 				51CAA34B235EEB9600720FB8 /* Stacker.m */,
-				51CAA352235EEB9600720FB8 /* Stacker+StackerPrivate.h */,
-				51CAA34C235EEB9600720FB8 /* StackerPushTransition.h */,
-				51CAA350235EEB9600720FB8 /* StackerPushTransition.m */,
-				5123B45523614DA800C90B99 /* StackerPresentTransition.h */,
-				5123B45623614DA800C90B99 /* StackerPresentTransition.m */,
 				51CAA351235EEB9600720FB8 /* StackerTransition.h */,
 				51CAA348235EEB9600720FB8 /* StackerTransition.m */,
-				51CAA343235EEB9500720FB8 /* StackerTransition+StackerPrivate.h */,
-				51CAA346235EEB9600720FB8 /* UINavigationController+StackerPrivate.h */,
+				51DD3D2523B20CC000443BBA /* StackerDefaultTransition.h */,
+				51DD3D2423B20CC000443BBA /* StackerDefaultTransition.m */,
+				51CAA345235EEB9600720FB8 /* UIViewController+StackerPublic.h */,
 				51CAA347235EEB9600720FB8 /* UINavigationController+StackerPublic.h */,
 				51CAA353235EEB9700720FB8 /* UINavigationController+StackerPublic.m */,
+				51CAA343235EEB9500720FB8 /* StackerTransition+StackerPrivate.h */,
 				51CAA34A235EEB9600720FB8 /* UIViewController+StackerPrivate.h */,
 				51CAA342235EEB9500720FB8 /* UIViewController+StackerPrivate.m */,
-				51CAA345235EEB9600720FB8 /* UIViewController+StackerPublic.h */,
+				51CAA346235EEB9600720FB8 /* UINavigationController+StackerPrivate.h */,
+				51CAA34F235EEB9600720FB8 /* NSObject+StackerPrivate.h */,
+				51CAA349235EEB9600720FB8 /* NSObject+StackerPrivate.m */,
 				51CAA33B235EEB6400720FB8 /* Info.plist */,
 			);
 			path = Stacker;
@@ -191,10 +182,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				51CAA35E235EEB9700720FB8 /* StackerPushTransition.h in Headers */,
-				5123B45723614DA800C90B99 /* StackerPresentTransition.h in Headers */,
-				51CAA364235EEB9700720FB8 /* Stacker+StackerPrivate.h in Headers */,
 				51CAA35C235EEB9700720FB8 /* UIViewController+StackerPrivate.h in Headers */,
+				51DD3D3523B304ED00443BBA /* StackerDefaultTransition.h in Headers */,
 				51CAA359235EEB9700720FB8 /* UINavigationController+StackerPublic.h in Headers */,
 				51CAA361235EEB9700720FB8 /* NSObject+StackerPrivate.h in Headers */,
 				5123B45423614D4900C90B99 /* Stacker.h in Headers */,
@@ -310,9 +299,8 @@
 				51CAA35A235EEB9700720FB8 /* StackerTransition.m in Sources */,
 				51CAA365235EEB9700720FB8 /* UINavigationController+StackerPublic.m in Sources */,
 				51CAA354235EEB9700720FB8 /* UIViewController+StackerPrivate.m in Sources */,
-				51CAA366235EEDA000720FB8 /* StackerPushTransition.m in Sources */,
+				51DD3D2823B210D700443BBA /* StackerDefaultTransition.m in Sources */,
 				51CAA35B235EEB9700720FB8 /* NSObject+StackerPrivate.m in Sources */,
-				5123B45823614DA800C90B99 /* StackerPresentTransition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

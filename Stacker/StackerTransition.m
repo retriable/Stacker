@@ -6,19 +6,14 @@
 //  Copyright © 2019 ouyanghua. All rights reserved.
 //
 
-#import "Stacker+StackerPrivate.h"
 #import "StackerTransition.h"
+#import "Stacker.h"
 
 @interface StackerTransition()
 
-@property (nonatomic,weak) Stacker          *stacker;
-@property (nonatomic,weak) UIViewController *viewController;
-@property (nonatomic,weak) UIViewController *fromViewController;
-@property (nonatomic,weak) UIViewController *toViewController;
-
 @property (nonatomic,copy) void(^completeBlock)(BOOL finished);
 @property (nonatomic,copy) BOOL(^interactionCancelledBlock)(void);
-@property (nonatomic,copy) void(^startInteractionBlock)(CFTimeInterval duration);
+@property (nonatomic,copy) void(^startInteractionBlock)(void);
 @property (nonatomic,copy) void(^updateInteractionBlock)(CGFloat progress);
 @property (nonatomic,copy) void(^cancelInteractionBlock)(CGFloat speed);
 @property (nonatomic,copy) void(^finishInteractionBlock)(CGFloat speed);
@@ -43,21 +38,27 @@
     self.completeBlock(finished);
 }
 
-
 - (void)restoreTransition{
-    
+
 }
 
-- (BOOL)interactionCancelled{
-    return self.interactionCancelledBlock();
+- (void)layoutView:(UIView*)view{
+    view.superview.translatesAutoresizingMaskIntoConstraints = NO;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [view.superview addConstraints:@[
+        [NSLayoutConstraint constraintWithItem:view.superview attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeTop multiplier:1 constant:0],
+        [NSLayoutConstraint constraintWithItem:view.superview attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeading multiplier:1 constant:0],
+        [NSLayoutConstraint constraintWithItem:view.superview attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1 constant:0],
+        [NSLayoutConstraint constraintWithItem:view.superview attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeTrailing multiplier:1 constant:0],
+    ]];
 }
 
 - (void)startTransition:(CFTimeInterval)duration{
     [self complete:YES];
 }
 
-- (void)startInteraction:(CFTimeInterval)duration{
-    self.startInteractionBlock(duration);
+- (void)startInteraction{
+    self.startInteractionBlock();
 }
 
 - (void)updateInteraction:(CGFloat)progress{
@@ -72,7 +73,10 @@
     self.finishInteractionBlock(speed);
 }
 
-- (void)fixNavigationBarPosition {
+- (BOOL)interactionCancelled{
+    return self.interactionCancelledBlock();
+}
+- (void)fixNavigationBarPosition{
     if (self.fromViewController!=self.viewController) return;
     UINavigationController *v=(UINavigationController*)self.viewController;
     BOOL navigationBarHidden=v.navigationBarHidden;
