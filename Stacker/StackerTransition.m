@@ -7,9 +7,13 @@
 //
 
 #import "StackerTransition.h"
-#import "Stacker.h"
 
 @interface StackerTransition()
+
+@property (nonatomic, weak          ) Stacker                *stacker;
+@property (nonatomic, weak          ) UIViewController       *viewController;
+@property (nonatomic, weak, nullable) UIViewController       *fromViewController;
+@property (nonatomic, weak,         ) UIViewController       *toViewController;
 
 @property (nonatomic,copy) void(^completeBlock)(BOOL finished);
 @property (nonatomic,copy) BOOL(^interactionCancelledBlock)(void);
@@ -25,7 +29,6 @@
 - (instancetype)init{
     self=[super init];
     if (!self) return nil;
-    self.duration=0.25;
     return self;
 }
 

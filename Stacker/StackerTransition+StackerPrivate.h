@@ -14,7 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface StackerTransition (StackerPrivate)
 
-@property (nonatomic,weak) Stacker          *stacker;
+@property (nonatomic,weak          ) Stacker          *stacker;
+@property (nonatomic, weak         ) UIViewController *viewController;
+@property (nonatomic, weak,nullable) UIViewController *fromViewController;
+@property (nonatomic, weak         ) UIViewController *toViewController;
 
 @property (nonatomic,copy) void(^completeBlock)(BOOL finished);
 @property (nonatomic,copy) BOOL(^interactionCancelledBlock)(void);

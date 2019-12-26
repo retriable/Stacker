@@ -11,9 +11,8 @@
 #import "NSObject+StackerPrivate.h"
 #import "StackerDefaultTransition.h"
 #import "UIViewController+StackerPrivate.h"
-#import "UIViewController+StackerPublic.h"
 
-@implementation UIViewController (StackerPrivate)
+@implementation UIViewController (StackerPublic)
 
 - (Stacker *)stacker_stacker {
     if ([self isKindOfClass:UINavigationController.class]) {

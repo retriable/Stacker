@@ -6,8 +6,8 @@
 //  Copyright © 2019 ouyanghua. All rights reserved.
 //
 
-#import "NSObject+StackerPrivate.h"
 #import "Stacker.h"
+#import "NSObject+StackerPrivate.h"
 #import "StackerTransition+StackerPrivate.h"
 #import "UINavigationController+StackerPrivate.h"
 #import "UIViewController+StackerPrivate.h"
@@ -304,9 +304,9 @@
         }else{
             UIViewController *nextViewController=navigationControllers[i+1];
             if (i>=location) {
-                visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_style==StackerTransitionStyleOverCurrentContext:NO;
+                visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO;
             }else {
-                visableFlags[i]=increasing?(visableFlags[i+1]?nextViewController.stacker_style==StackerTransitionStyleOverCurrentContext:NO):NO;
+                visableFlags[i]=increasing?(visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO):NO;
             }
         }
         if (!visableFlags[i]||didGetMaster) continue;
@@ -463,7 +463,7 @@
         else if (i>location) visableFlags[i]=NO;
         else{
             UIViewController *nextViewController=self.navigationControllers[i+1];
-            visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_style==StackerTransitionStyleOverCurrentContext:NO;
+            visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO;
         }
         if (!visableFlags[i]||didGetMaster) continue;
         newMasterViewController=[navigationControllers[i] topViewController];
@@ -586,7 +586,6 @@
     CALayer *layer = self.view.layer;
     layer.timeOffset = self.animationPausedTimeOffset + self.animationDuration * progress;
 }
-
 
 - (void)finishInteractionWithSpeed:(CGFloat)speed{
     if (self.displayLink) return;

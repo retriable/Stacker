@@ -124,7 +124,7 @@
                     if (weakSelf.title.integerValue%2!=0){
                         StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
                         transition.percentParallax = 0.25;
-                        v.stacker_style = StackerTransitionStyleOverCurrentContext;
+                        transition.style = StackerTransitionStyleOverCurrentContext;
                     }
                     v;
                 }) animated:YES];
@@ -138,19 +138,65 @@
                 [weakSelf.navigationController pushViewControllers:@[({
                     ViewController *v= [[ViewController alloc]init];
                     v.title=[@(weakSelf.title.integerValue+1) description];
+                    StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
                     if (weakSelf.title.integerValue%2!=0){
-                        StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
                         transition.percentParallax = 0.25;
-                        v.stacker_style = StackerTransitionStyleOverCurrentContext;
+                        transition.style = StackerTransitionStyleOverCurrentContext;
                     }
                     v;
                 }),({
                     ViewController *v= [[ViewController alloc]init];
                     v.title=[@(weakSelf.title.integerValue+2) description];
+                    StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
                     if (weakSelf.title.integerValue%2!=0){
-                        StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
                         transition.percentParallax = 0.25;
-                        v.stacker_style = StackerTransitionStyleOverCurrentContext;
+                        transition.style = StackerTransitionStyleOverCurrentContext;
+                    }
+                    v;
+                })] animated:YES];
+            };
+            v;
+        }),
+        ({
+            Model *v=[[Model alloc]init];
+            v.title=@"present 1";
+            v.block=^{
+                [weakSelf.navigationController pushViewController:({
+                    ViewController *v= [[ViewController alloc]init];
+                    v.title=[@(weakSelf.title.integerValue+1) description];
+                    StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
+                    transition.direction = StackerDefaultTransitionDirectionBottomToTop;
+                    if (weakSelf.title.integerValue%2!=0){
+                        transition.percentParallax = 0.25;
+                        transition.style = StackerTransitionStyleOverCurrentContext;
+                    }
+                    v;
+                }) animated:YES];
+            };
+            v;
+        }),
+        ({
+            Model *v=[[Model alloc]init];
+            v.title=@"present 2";
+            v.block=^{
+                [weakSelf.navigationController pushViewControllers:@[({
+                    ViewController *v= [[ViewController alloc]init];
+                    v.title=[@(weakSelf.title.integerValue+1) description];
+                    StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
+                    transition.direction = StackerDefaultTransitionDirectionBottomToTop;
+                    if (weakSelf.title.integerValue%2!=0){
+                        transition.percentParallax = 0.25;
+                        transition.style = StackerTransitionStyleOverCurrentContext;
+                    }
+                    v;
+                }),({
+                    ViewController *v= [[ViewController alloc]init];
+                    v.title=[@(weakSelf.title.integerValue+2) description];
+                    StackerDefaultTransition * transition = (StackerDefaultTransition*)v.stacker_transition;
+                    transition.direction = StackerDefaultTransitionDirectionBottomToTop;
+                    if (weakSelf.title.integerValue%2!=0){
+                        transition.percentParallax = 0.25;
+                        transition.style = StackerTransitionStyleOverCurrentContext;
                     }
                     v;
                 })] animated:YES];

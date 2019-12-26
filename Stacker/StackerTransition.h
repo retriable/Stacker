@@ -8,19 +8,24 @@
 
 @import UIKit;
 
-NS_ASSUME_NONNULL_BEGIN
-
 @class Stacker;
-@class StackerTransition;
+
+
+typedef NS_ENUM(NSInteger,StackerTransitionStyle) {
+    StackerTransitionStyleCurrentContext,
+    StackerTransitionStyleOverCurrentContext
+};
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface StackerTransition : NSObject
 
-@property (nonatomic, weak         ) Stacker                *stacker;
-@property (nonatomic, weak         ) UIViewController       *viewController;
-@property (nonatomic, weak,nullable) UIViewController       *fromViewController;
-@property (nonatomic, weak         ) UIViewController       *toViewController;
-@property (nonatomic, assign       ) CFTimeInterval         duration;
-@property (nonatomic, readonly     ) BOOL                   interactionCancelled;
+@property (nonatomic, weak, readonly          ) Stacker                *stacker;
+@property (nonatomic, weak, readonly          ) UIViewController       *viewController;
+@property (nonatomic, weak, readonly, nullable) UIViewController       *fromViewController;
+@property (nonatomic, weak, readonly          ) UIViewController       *toViewController;
+@property (nonatomic, readonly                ) BOOL                   interactionCancelled;
+@property (nonatomic, assign                  ) StackerTransitionStyle style;
 
 - (void)complete:(BOOL)finished;
 

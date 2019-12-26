@@ -10,6 +10,8 @@
 
 @class Stacker;
 
+#import "UIViewController+StackerPublic.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UIViewController (StackerPrivate)

@@ -19,7 +19,6 @@ typedef NS_ENUM(NSInteger, StackerDefaultTransitionDirection) {
 
 @property (nonatomic, assign          ) StackerDefaultTransitionDirection direction;
 @property (nonatomic, assign          ) CGFloat                           percentParallax;
-@property (nonatomic, assign          ) BOOL                              popInteractionEnabled;
 @property (nonatomic, strong, readonly) UIPanGestureRecognizer            *interactivePopGestureRecognizer;
 
 @end
