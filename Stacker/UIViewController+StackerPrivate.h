@@ -6,9 +6,11 @@
 //  Copyright © 2019 ouyanghua. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @class Stacker;
+
+#import "UIViewController+StackerPublic.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
