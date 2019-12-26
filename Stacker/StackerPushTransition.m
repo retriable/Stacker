@@ -9,7 +9,26 @@
 #import "Stacker.h"
 #import "StackerPushTransition.h"
 
-@interface StackerPushTransition()
+@interface StackerPushTransitionContext :NSObject
+
+@property (nonatomic,strong) UIPanGestureRecognizer *panGestureRecognizer;
+@property (nonatomic,assign) CGPoint                startPoint;
+@property (nonatomic,assign) CATransform3D          fromTransform;
+@property (nonatomic,assign) CATransform3D          toTransform;
+
+@end
+
+@implementation StackerPushTransitionContext
+
+@end
+
+@interface UIViewController (StackerPushTransition)
+
+@property (nonatomic, strong)StackerPushTransitionContext *stacker_pushTransitionContext;
+
+@end
+
+@interface StackerPushTransition()<UIGestureRecognizerDelegate>
 
 @property (nonatomic,strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic,assign) CGPoint                startPoint;
@@ -25,7 +44,7 @@
         v.layer.shadowPath =[UIBezierPath bezierPathWithRect:v.bounds].CGPath;
         v.layer.shadowColor=[UIColor blackColor].CGColor;
         v.layer.shadowOffset=CGSizeMake(-8, 0);
-        v.layer.shadowRadius=8;
+        v.layer.shadowRadius=8;   
         v.layer.shadowOpacity=0.5;
     };
     void(^disableShadow)(UIView *v)=^(UIView *v){
@@ -59,7 +78,7 @@
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             view.alpha=0.5;
             toView.layer.transform=CATransform3DIdentity;
-            fromView.layer.transform=CATransform3DScale(fromView.layer.transform, 0.985, 0.985, 1);
+            fromView.layer.transform=CATransform3DScale(fromView.layer.transform, 1, 1, 1);
         } completion:^(BOOL finished) {
             uncover(fromView);
             disableShadow(toView);
@@ -119,7 +138,17 @@
 - (UIPanGestureRecognizer*)panGestureRecognizer{
     if (_panGestureRecognizer) return _panGestureRecognizer;
     _panGestureRecognizer=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
+    _panGestureRecognizer.delegate=self;
     return _panGestureRecognizer;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    UIView *superview=gestureRecognizer.view.superview;
+    CGPoint point=[gestureRecognizer locationInView:superview];
+    if (point.x>CGRectGetWidth(superview.bounds)/2.0){
+        return NO;
+    }
+    return YES;
 }
 
 @end

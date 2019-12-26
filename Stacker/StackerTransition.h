@@ -20,7 +20,6 @@ typedef NS_ENUM(NSInteger,StackerTransitionStyle) {
 @interface StackerTransition : NSObject
 
 @property (nonatomic,assign      ) CFTimeInterval         duration;
-@property (nonatomic,assign      ) StackerTransitionStyle style;
 @property (readonly,weak,nullable) Stacker                *stacker;
 @property (readonly,weak         ) UIViewController       *viewController;
 @property (readonly,weak,nullable) UIViewController       *fromViewController;

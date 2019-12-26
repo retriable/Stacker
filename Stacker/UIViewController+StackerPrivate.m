@@ -38,6 +38,14 @@
     return [objc_getAssociatedObject(self, @selector(stacker_master)) boolValue];
 }
 
+- (void)setStacker_style:(StackerTransitionStyle)stacker_style{
+    objc_setAssociatedObject(self, @selector(stacker_style), @(stacker_style), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (StackerTransitionStyle)stacker_style{
+    return [objc_getAssociatedObject(self, @selector(stacker_style)) integerValue];
+}
+
 - (void)setStacker_transition:(StackerTransition*)stacker_transition{
     objc_setAssociatedObject(self, @selector(stacker_transition), stacker_transition, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }

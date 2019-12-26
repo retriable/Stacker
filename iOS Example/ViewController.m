@@ -123,6 +123,8 @@
                     ViewController *v= [[ViewController alloc]init];
                     v.title=[@(weakSelf.title.integerValue+1) description];
                     v.stacker_transition=[[StackerPushTransition alloc]init];
+                    v.stacker_style = weakSelf.title.integerValue%2==0?StackerTransitionStyleCurrentContext:StackerTransitionStyleOverCurrentContext;
+;
                     v;
                 }) animated:YES];
             };
@@ -330,18 +332,18 @@
                             v.title=[@(weakSelf.title.integerValue+1) description];
                             v.stacker_transition=({
                                 StackerPushTransition *v=[[StackerPushTransition alloc]init];
-                                v.style=StackerTransitionStyleOverCurrentContext;
                                 v;
                             });
+                            v.stacker_style = StackerTransitionStyleOverCurrentContext;
                             v;
                         }),({
                             ViewController *v= [[ViewController alloc]init];
                             v.title=[@(weakSelf.title.integerValue+2) description];
                                 v.stacker_transition=({
                                                 StackerPresentTransition *v=[[StackerPresentTransition alloc]init];
-                                                v.style=StackerTransitionStyleOverCurrentContext;
                                                 v;
                                             });
+                            v.stacker_style=StackerTransitionStyleOverCurrentContext;
                             v;
                         })] animated:YES];
                     };

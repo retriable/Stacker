@@ -249,9 +249,9 @@
         }else{
             UIViewController *nextViewController=navigationControllers[i+1];
             if (i>=location) {
-                visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO;
+                visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_style==StackerTransitionStyleOverCurrentContext:NO;
             }else {
-                visableFlags[i]=increasing?(visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO):NO;
+                visableFlags[i]=increasing?(visableFlags[i+1]?nextViewController.stacker_style==StackerTransitionStyleOverCurrentContext:NO):NO;
             }
         }
         if (!visableFlags[i]||didGetMaster) continue;
@@ -273,6 +273,7 @@
     NSArray *oldViewControllers = [self.viewControllers copy];
     NSArray *oldNavigationControllers = [self.navigationControllers copy];
     void (^didCancelBlock)(void)=^{
+        weakSelf.interactionDidCancel = nil;
         for (NSInteger i=0,count=didCancelBlocks.count;i<count;i++){
             didCancelBlocks[i]();
         }
@@ -290,6 +291,7 @@
     };
     self.interactionDidCancel = didCancelBlock;
     void (^didFinishBlock)(void)=^{
+        weakSelf.interactionDidCancel = nil;
         for (NSInteger i=didFinishBlocks.count-1;i>=0;i--){
             didFinishBlocks[i]();
         }
@@ -328,7 +330,6 @@
         }else{
             if (navigationController.parentViewController){
                 if(appeared) [navigationController beginAppearanceTransition:NO animated:animated];
-                [self.view sendSubviewToBack:navigationController.view];
                 [navigationController willMoveToParentViewController:nil];
                 [willCancelBlocks addObject:^{
                     if(appeared) [navigationController beginAppearanceTransition:YES animated:animated];
@@ -418,6 +419,7 @@
         }
     };
     void(^didCancelBlock)(void)=^{
+        weakSelf.interactionDidCancel = nil;
         [(NSMutableArray*)weakSelf.viewControllers addObjectsFromArray:popedViewControllers];
         [weakSelf.navigationControllers addObjectsFromArray:popedNavigationControllers];
         for (NSInteger i = 0,count = didCancelBlocks.count;i<count;i++){
@@ -427,6 +429,7 @@
     };
     self.interactionDidCancel = didCancelBlock;
     void(^didFinishBlock)(void)=^{
+        weakSelf.interactionDidCancel = nil;
         for (NSInteger i = didFinishBlocks.count-1;i>=0;i--){
             didFinishBlocks[i]();
         }
@@ -440,7 +443,7 @@
         else if (i>location) visableFlags[i]=NO;
         else{
             UIViewController *nextViewController=self.navigationControllers[i+1];
-            visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO;
+            visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_style==StackerTransitionStyleOverCurrentContext:NO;
         }
         if (!visableFlags[i]||didGetMaster) continue;
         newMasterViewController=[navigationControllers[i] topViewController];
@@ -595,7 +598,11 @@
     layer.speed = 1.0;
     layer.beginTime = CACurrentMediaTime()-self.animationDuration;
     layer.timeOffset = CACurrentMediaTime();
-    if (self.interactionCancelled) self.interactionDidCancel();
+    if (self.interactionCancelled) {
+        if (self.interactionDidCancel){
+            self.interactionDidCancel();
+        }
+    }
     layer.beginTime=0;
     layer.timeOffset=0;
 }

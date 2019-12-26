@@ -9,7 +9,7 @@
 #import "Stacker.h"
 #import "StackerPresentTransition.h"
 
-@interface StackerPresentTransition()
+@interface StackerPresentTransition()<UIGestureRecognizerDelegate>
 
 @property (nonatomic,strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic,assign) CGPoint                startPoint;
@@ -58,7 +58,7 @@
         [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             view.alpha=0.5;
             toView.layer.transform=CATransform3DIdentity;
-            fromView.layer.transform=CATransform3DScale(fromView.layer.transform, 0.985, 0.985, 1);
+            fromView.layer.transform=CATransform3DScale(fromView.layer.transform, 1, 1, 1);
         } completion:^(BOOL finished) {
             uncover(fromView);
             disableShadow(toView);
@@ -118,7 +118,18 @@
 - (UIPanGestureRecognizer*)panGestureRecognizer{
     if (_panGestureRecognizer) return _panGestureRecognizer;
     _panGestureRecognizer=[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
+    _panGestureRecognizer.delegate=self;
+    _panGestureRecognizer.enabled=NO;
     return _panGestureRecognizer;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    UIView *superview=gestureRecognizer.view.superview;
+    CGPoint point=[gestureRecognizer locationInView:superview];
+    if (point.y>CGRectGetHeight(superview.bounds)/2.0){
+        return NO;
+    }
+    return YES;
 }
 
 @end
