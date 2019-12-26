@@ -6,18 +6,18 @@
 //  Copyright © 2019 ouyanghua. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
-#import "StackerTransition.h"
+@class Stacker;
+@class StackerTransition;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UIViewController (StackerPublic)
 
-@property (readonly,weak,nullable   ) Stacker                *stacker_stacker;
-@property (nonatomic,strong,nullable) StackerTransition      *stacker_transition;
-@property (nonatomic,assign         ) BOOL                   stacker_master;
-@property (nonatomic,assign         ) StackerTransitionStyle stacker_style;
+@property (readonly,  weak,   nullable) Stacker                *stacker_stacker;
+@property (nonatomic, strong          ) StackerTransition      *stacker_transition;
+@property (nonatomic, assign          ) BOOL                   stacker_master;
 
 @end
 

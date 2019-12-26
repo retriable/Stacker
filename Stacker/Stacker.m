@@ -6,8 +6,8 @@
 //  Copyright © 2019 ouyanghua. All rights reserved.
 //
 
-#import "NSObject+StackerPrivate.h"
 #import "Stacker.h"
+#import "NSObject+StackerPrivate.h"
 #import "StackerTransition+StackerPrivate.h"
 #import "UINavigationController+StackerPrivate.h"
 #import "UIViewController+StackerPrivate.h"
@@ -17,10 +17,8 @@
     NSArray<__kindof UIViewController*> *_viewControllers;
 }
 @property (nonatomic,assign) BOOL             busy;
-
 @property (nonatomic,assign) Class            navigationControllerClass;
 @property (nonatomic,weak  ) UIViewController *masterViewController;
-
 @property (nonatomic,strong) NSMutableArray<__kindof UINavigationController*> *navigationControllers;
 
 //percent driven interactive transition
@@ -77,6 +75,10 @@
     return [self popViewControllerAnimated:YES];
 }
 
+- (nullable __kindof UIViewController *)popViewControllerAnimated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+    return [self popViewControllerWithDuration:animated?UINavigationControllerHideShowBarDuration:0 completion:completion];
+}
+
 - (nullable NSArray<__kindof UIViewController *> *)popToRootViewController{
     return [self popToRootViewControllerAnimated:YES];
 }
@@ -89,12 +91,25 @@
     [self setViewControllers:viewControllers animated:animated completion:nil];
 }
 
+- (void)setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+    [self setViewControllers:viewControllers duration:animated?UINavigationControllerHideShowBarDuration:0 completion:completion];
+}
+
 - (void)pushViewController:(__kindof UIViewController *)viewController animated:(BOOL)animated{
     [self pushViewController:viewController animated:animated completion:nil];
 }
 
+- (void)pushViewController:(__kindof UIViewController *)viewController animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+    [self pushViewController:viewController duration:animated?UINavigationControllerHideShowBarDuration:0 completion:completion];
+}
+
 - (void)pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated{
     [self pushViewControllers:viewControllers animated:animated completion:nil];
+}
+
+
+- (void)pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+    [self pushViewControllers:viewControllers duration:animated?UINavigationControllerHideShowBarDuration:0 completion:completion];
 }
 
 - (nullable __kindof UIViewController *)popViewControllerAnimated:(BOOL)animated{
@@ -105,11 +120,19 @@
     return [self popToRootViewControllerAnimated:animated completion:nil];
 }
 
+- (nullable NSArray<__kindof UIViewController *> *)popToRootViewControllerAnimated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+    return [self popToRootViewControllerWithDuration:animated?UINavigationControllerHideShowBarDuration:0 completion:completion];
+}
+
 - (nullable NSArray<__kindof UIViewController *> *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated{
     return [self popToViewController:viewController animated:animated completion:nil];
 }
 
-- (void)setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+- (nullable NSArray<__kindof UIViewController *> *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+    return [self popToRootViewControllerWithDuration:animated?UINavigationControllerHideShowBarDuration:0 completion:completion];
+}
+
+- (void)setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers duration:(CFTimeInterval)duration completion:(void(^_Nullable)(BOOL finished))completion{
     if (self.busy) {
         if (completion) completion(NO);
         return;
@@ -121,26 +144,26 @@
         return;
     }
     __weak typeof(self) weakSelf=self;
-    [self _pushViewControllers:viewControllers increasing:NO animated:animated completion:^(BOOL finished){
+    [self _pushViewControllers:viewControllers increasing:NO duration:duration completion:^(BOOL finished){
         weakSelf.busy=NO;
         if (completion) completion(finished);
     }];
 }
 
-- (void)pushViewController:(__kindof UIViewController *)viewController animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+- (void)pushViewController:(__kindof UIViewController *)viewController duration:(CFTimeInterval)duration completion:(void(^_Nullable)(BOOL finished))completion{
     if (self.busy) {
         if (completion) completion(NO);
         return;
     }
     self.busy=YES;
     __weak typeof(self) weakSelf=self;
-    [self _pushViewControllers:@[viewController] increasing:YES animated:animated completion:^(BOOL finished){
+    [self _pushViewControllers:@[viewController] increasing:YES duration:duration completion:^(BOOL finished){
         weakSelf.busy=NO;
         if (completion) completion(finished);
     }];
 }
 
-- (void)pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+- (void)pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers duration:(CFTimeInterval)duration completion:(void(^_Nullable)(BOOL finished))completion{
     if (self.busy) {
         if (completion) completion(NO);
         return;
@@ -152,13 +175,14 @@
         return;
     }
     __weak typeof(self) weakSelf=self;
-    [self _pushViewControllers:viewControllers increasing:YES animated:animated completion:^(BOOL finished){
+    [self _pushViewControllers:viewControllers increasing:YES duration:duration completion:^(BOOL finished){
         weakSelf.busy=NO;
         if (completion) completion(finished);
     }];
 }
 
-- (nullable __kindof UIViewController *)popViewControllerAnimated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+
+- (nullable __kindof UIViewController *)popViewControllerWithDuration:(CFTimeInterval)duration completion:(void(^_Nullable)(BOOL finished))completion{
     if (self.busy) {
         if (completion) completion(NO);
         return nil;
@@ -170,13 +194,13 @@
         return nil;
     }
     __weak typeof(self) weakSelf=self;
-    return [self _popToViewController:self.viewControllers[self.viewControllers.count-2] animated:animated completion:^(BOOL finished){
+    return [self _popToViewController:self.viewControllers[self.viewControllers.count-2] duration:duration completion:^(BOOL finished){
         weakSelf.busy=NO;
         if (completion) completion(finished);
     }].lastObject;
 }
 
-- (nullable NSArray<__kindof UIViewController *> *)popToRootViewControllerAnimated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+- (nullable NSArray<__kindof UIViewController *> *)popToRootViewControllerWithDuration:(CFTimeInterval)duration completion:(void(^_Nullable)(BOOL finished))completion{
     if (self.busy) {
         if (completion) completion(NO);
         return nil;
@@ -188,13 +212,13 @@
         return nil;
     }
     __weak typeof(self) weakSelf=self;
-    return [self _popToViewController:self.viewControllers.firstObject animated:animated completion:^(BOOL finished){
+    return [self _popToViewController:self.viewControllers.firstObject duration:duration completion:^(BOOL finished){
         weakSelf.busy=NO;
         if (completion) completion(finished);
     }];
 }
 
-- (nullable NSArray<__kindof UIViewController *> *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
+- (nullable NSArray<__kindof UIViewController *> *)popToViewController:(UIViewController *)viewController duration:(CFTimeInterval)duration completion:(void(^_Nullable)(BOOL finished))completion{
     if (self.busy) {
         if (completion) completion(NO);
         return nil;
@@ -212,19 +236,50 @@
         return nil;
     }
     __weak typeof(self) weakSelf=self;
-    return [self _popToViewController:viewController animated:animated completion:^(BOOL finished){
+    return [self _popToViewController:viewController duration:duration completion:^(BOOL finished){
         weakSelf.busy=NO;
         if (completion) completion(finished);
     }];
 }
 
-- (void)_pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers increasing:(BOOL)increasing animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
-    self.interactionCancelled=NO;
+- (void)_pushViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers increasing:(BOOL)increasing duration:(CFTimeInterval)duration completion:(void(^_Nullable)(BOOL finished))completion{
     __weak typeof(self) weakSelf=self;
+    BOOL animated = duration>0;
     dispatch_group_t group = animated?dispatch_group_create():NULL;
+    NSArray *oldViewControllers = [self.viewControllers copy];
+    NSArray *oldNavigationControllers = [self.navigationControllers copy];
     NSMutableArray <void(^)(void)> *willCancelBlocks=[NSMutableArray array];
     NSMutableArray <void(^)(void)> *didCancelBlocks=[NSMutableArray array];
     NSMutableArray <void(^)(void)> *didFinishBlocks=[NSMutableArray array];
+    void (^willCancelBlock)(void)=^{
+        for (NSInteger i=willCancelBlocks.count-1;i>=0;i--){
+            willCancelBlocks[i]();
+        }
+    };
+    void (^didCancelBlock)(void) = ^{
+        weakSelf.interactionDidCancel = nil;
+        for (NSInteger i=0,count=didCancelBlocks.count;i<count;i++){
+            didCancelBlocks[i]();
+        }
+        if (!increasing){
+            [(NSMutableArray*)weakSelf.viewControllers removeAllObjects];
+            [weakSelf.navigationControllers removeAllObjects];
+            [(NSMutableArray*)weakSelf.viewControllers addObjectsFromArray:oldViewControllers];
+            [weakSelf.navigationControllers addObjectsFromArray:oldNavigationControllers];
+            return;
+        }
+        NSRange range = NSMakeRange(weakSelf.viewControllers.count-1-viewControllers.count, viewControllers.count);
+        [(NSMutableArray*)weakSelf.viewControllers removeObjectsInRange:range];
+        [weakSelf.navigationControllers removeObjectsInRange:range];
+        if (completion) completion(NO);
+    };
+    void (^didFinishBlock)(void)=^{
+        weakSelf.interactionDidCancel = nil;
+        for (NSInteger i=didFinishBlocks.count-1;i>=0;i--){
+            didFinishBlocks[i]();
+        }
+        if (completion) completion(YES);
+    };
     NSMutableArray<__kindof UIViewController*> *navigationControllers=({
         NSMutableArray *v=[NSMutableArray arrayWithCapacity:self.navigationControllers.count+viewControllers.count];
         [v addObjectsFromArray:self.navigationControllers];
@@ -249,9 +304,9 @@
         }else{
             UIViewController *nextViewController=navigationControllers[i+1];
             if (i>=location) {
-                visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_style==StackerTransitionStyleOverCurrentContext:NO;
+                visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO;
             }else {
-                visableFlags[i]=increasing?(visableFlags[i+1]?nextViewController.stacker_style==StackerTransitionStyleOverCurrentContext:NO):NO;
+                visableFlags[i]=increasing?(visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO):NO;
             }
         }
         if (!visableFlags[i]||didGetMaster) continue;
@@ -265,53 +320,17 @@
             weakSelf.masterViewController=oldMasterViewController;
         }];
     }
-    void (^willCancelBlock)(void)=^{
-        for (NSInteger i=willCancelBlocks.count-1;i>=0;i--){
-            willCancelBlocks[i]();
-        }
-    };
-    NSArray *oldViewControllers = [self.viewControllers copy];
-    NSArray *oldNavigationControllers = [self.navigationControllers copy];
-    void (^didCancelBlock)(void)=^{
-        weakSelf.interactionDidCancel = nil;
-        for (NSInteger i=0,count=didCancelBlocks.count;i<count;i++){
-            didCancelBlocks[i]();
-        }
-        if (!increasing){
-            [(NSMutableArray*)weakSelf.viewControllers removeAllObjects];
-            [weakSelf.navigationControllers removeAllObjects];
-            [(NSMutableArray*)weakSelf.viewControllers addObjectsFromArray:oldViewControllers];
-            [weakSelf.navigationControllers addObjectsFromArray:oldNavigationControllers];
-            return;
-        }
-        NSRange range = NSMakeRange(weakSelf.viewControllers.count-1-viewControllers.count, viewControllers.count);
-        [(NSMutableArray*)weakSelf.viewControllers removeObjectsInRange:range];
-        [weakSelf.navigationControllers removeObjectsInRange:range];
-        if (completion) completion(NO);
-    };
+    self.interactionCancelled = NO;
     self.interactionDidCancel = didCancelBlock;
-    void (^didFinishBlock)(void)=^{
-        weakSelf.interactionDidCancel = nil;
-        for (NSInteger i=didFinishBlocks.count-1;i>=0;i--){
-            didFinishBlocks[i]();
-        }
-        if (completion) completion(YES);
-    };
     BOOL appeared=self.view.superview?YES:NO;
     for (NSInteger i=0,count=navigationControllers.count;i<count;i++){
         __weak UINavigationController *navigationController=navigationControllers[i];
         if (visableFlags[i]) {
             if (!navigationController.parentViewController){
-                navigationController.view.translatesAutoresizingMaskIntoConstraints=NO;
                 if(appeared) [navigationController beginAppearanceTransition:YES animated:animated];
                 [self stacker_addChildViewController:navigationController];
                 [self.view addSubview:navigationController.view];
-                [self.view addConstraints:@[
-                    [NSLayoutConstraint constraintWithItem:navigationController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
-                    [NSLayoutConstraint constraintWithItem:navigationController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],
-                    [NSLayoutConstraint constraintWithItem:navigationController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:1 constant:0],
-                    [NSLayoutConstraint constraintWithItem:navigationController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:1 constant:0]]
-                 ];
+                [navigationController.stacker_transition layoutView:navigationController.view];
                 [willCancelBlocks addObject:^{
                     if(appeared) [navigationController beginAppearanceTransition:NO animated:animated];
                 }];
@@ -349,23 +368,23 @@
         }
         if (animated){
             if (i>=location){
-                StackerTransition *transition=navigationController.stacker_transition;
+                __weak StackerTransition *transition = navigationController.stacker_transition;
                 transition.stacker=self;
                 transition.fromViewController=i>0?navigationControllers[i-1]:nil;
                 transition.toViewController=navigationController;
                 transition.viewController=navigationController;
-                transition.interactionCancelledBlock = ^{
-                    return self.interactionCancelled;
+                transition.interactionCancelledBlock = ^BOOL{
+                    return weakSelf.interactionCancelled;
                 };
-                transition.startInteractionBlock = ^(CFTimeInterval duration) {
+                transition.startInteractionBlock = ^{
                     [weakSelf startInteractionWithDuration:duration];
                 };
                 transition.updateInteractionBlock = ^(CGFloat progress) {
                     [weakSelf updateInteractionProgress:progress];
                 };
                 transition.cancelInteractionBlock = ^(CGFloat speed) {
-                    if (self.interactionCancelled) return;
-                    self.interactionCancelled=YES;
+                    if (weakSelf.interactionCancelled) return;
+                    weakSelf.interactionCancelled=YES;
                     willCancelBlock();
                     [weakSelf cancelInteractionWithSpeed:speed];
                 };
@@ -376,7 +395,7 @@
                     dispatch_group_leave(group);
                 };
                 dispatch_group_enter(group);
-                [transition startTransition:navigationControllers.lastObject.stacker_transition.duration];
+                [transition startTransition:duration];
             }
         }
     }
@@ -399,9 +418,9 @@
     }
 }
 
-- (nullable NSArray<__kindof UIViewController *> *)_popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void(^_Nullable)(BOOL finished))completion{
-    self.interactionCancelled=NO;
+- (nullable NSArray<__kindof UIViewController *> *)_popToViewController:(UIViewController *)viewController duration:(CFTimeInterval)duration completion:(void(^_Nullable)(BOOL finished))completion{
     __weak typeof(self) weakSelf=self;
+    BOOL animated = duration>0;
     dispatch_group_t group = animated?dispatch_group_create():NULL;
     NSMutableArray <void(^)(void)> *willCancelBlocks=[NSMutableArray array];
     NSMutableArray <void(^)(void)> *didCancelBlocks=[NSMutableArray array];
@@ -427,7 +446,6 @@
         }
         if (completion) completion(NO);
     };
-    self.interactionDidCancel = didCancelBlock;
     void(^didFinishBlock)(void)=^{
         weakSelf.interactionDidCancel = nil;
         for (NSInteger i = didFinishBlocks.count-1;i>=0;i--){
@@ -435,15 +453,17 @@
         }
         if (completion) completion(YES);
     };
+    self.interactionCancelled = NO;
+    self.interactionDidCancel = didCancelBlock;
     UIViewController *newMasterViewController=nil;
-    BOOL didGetMaster=NO;
+    BOOL didGetMaster = NO;
     for (NSInteger i=navigationControllers.count-1;i>=0;i--){
         visableFlags[i]=NO;
         if (i==location) visableFlags[i]=YES;
         else if (i>location) visableFlags[i]=NO;
         else{
             UIViewController *nextViewController=self.navigationControllers[i+1];
-            visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_style==StackerTransitionStyleOverCurrentContext:NO;
+            visableFlags[i]=visableFlags[i+1]?nextViewController.stacker_transition.style==StackerTransitionStyleOverCurrentContext:NO;
         }
         if (!visableFlags[i]||didGetMaster) continue;
         newMasterViewController=[navigationControllers[i] topViewController];
@@ -460,16 +480,10 @@
         __weak UINavigationController *navigationController=navigationControllers[i];
         if (visableFlags[i]) {
             if (!navigationController.parentViewController){
-                navigationController.view.translatesAutoresizingMaskIntoConstraints=NO;
                 [self stacker_addChildViewController:navigationController];
                 if(appeared) [navigationController beginAppearanceTransition:YES animated:animated];
                 [self.view insertSubview:navigationController.view atIndex:0];
-                [self.view addConstraints:@[
-                    [NSLayoutConstraint constraintWithItem:navigationController.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
-                    [NSLayoutConstraint constraintWithItem:navigationController.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],
-                    [NSLayoutConstraint constraintWithItem:navigationController.view attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:1 constant:0],
-                    [NSLayoutConstraint constraintWithItem:navigationController.view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:1 constant:0]]
-                 ];
+                [navigationController.stacker_transition layoutView:navigationController.view];
                 [willCancelBlocks addObject:^{
                     if(appeared) [navigationController beginAppearanceTransition:NO animated:animated];
                 }];
@@ -512,10 +526,10 @@
                 transition.fromViewController=navigationController;
                 transition.toViewController=i>0?navigationControllers[i-1]:nil;
                 transition.viewController=navigationController;
-                transition.interactionCancelledBlock = ^{
+                transition.interactionCancelledBlock = ^BOOL{
                     return weakSelf.interactionCancelled;
                 };
-                transition.startInteractionBlock = ^(CFTimeInterval duration) {
+                transition.startInteractionBlock = ^{
                     [weakSelf startInteractionWithDuration:duration];
                 };
                 transition.updateInteractionBlock = ^(CGFloat progress) {
@@ -537,7 +551,7 @@
                     [transition restoreTransition];
                 }];
                 dispatch_group_enter(group);
-                [transition startTransition:navigationControllers.lastObject.stacker_transition.duration];
+                [transition startTransition:duration];
             }
         }
     }
@@ -572,7 +586,6 @@
     CALayer *layer = self.view.layer;
     layer.timeOffset = self.animationPausedTimeOffset + self.animationDuration * progress;
 }
-
 
 - (void)finishInteractionWithSpeed:(CGFloat)speed{
     if (self.displayLink) return;

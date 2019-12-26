@@ -9,11 +9,10 @@
 #import <objc/runtime.h>
 
 #import "NSObject+StackerPrivate.h"
-#import "Stacker.h"
-#import "StackerPushTransition.h"
+#import "StackerDefaultTransition.h"
 #import "UIViewController+StackerPrivate.h"
 
-@implementation UIViewController (StackerPrivate)
+@implementation UIViewController (StackerPublic)
 
 - (Stacker *)stacker_stacker {
     if ([self isKindOfClass:UINavigationController.class]) {
@@ -43,6 +42,11 @@
 }
 
 - (StackerTransitionStyle)stacker_style{
+    id style = objc_getAssociatedObject(self, @selector(stacker_style));
+    if (style) return [style integerValue];
+    if ([self isKindOfClass:UINavigationController.class]){
+        return [[(UINavigationController*)self topViewController] stacker_style];
+    }
     return [objc_getAssociatedObject(self, @selector(stacker_style)) integerValue];
 }
 
@@ -51,13 +55,13 @@
 }
 
 - (StackerTransition*)stacker_transition{
-    StackerTransition* transition = objc_getAssociatedObject(self, @selector(stacker_transition));
+    StackerTransition *transition = objc_getAssociatedObject(self, @selector(stacker_transition));
     if (transition) return transition;
     if ([self isKindOfClass:UINavigationController.class]){
         transition=[(UINavigationController*)self topViewController].stacker_transition;
         if (transition) return transition;
     }
-    transition=[[StackerPushTransition alloc]init];
+    transition=[[StackerDefaultTransition alloc]init];
     self.stacker_transition=transition;
     return transition;
 }

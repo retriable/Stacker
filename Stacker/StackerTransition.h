@@ -6,37 +6,38 @@
 //  Copyright © 2019 ouyanghua. All rights reserved.
 //
 
-#import <UIKIt/UIKIt.h>
-
-NS_ASSUME_NONNULL_BEGIN
+@import UIKit;
 
 @class Stacker;
+
 
 typedef NS_ENUM(NSInteger,StackerTransitionStyle) {
     StackerTransitionStyleCurrentContext,
     StackerTransitionStyleOverCurrentContext
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface StackerTransition : NSObject
 
-@property (nonatomic,assign      ) CFTimeInterval         duration;
-@property (readonly,weak,nullable) Stacker                *stacker;
-@property (readonly,weak         ) UIViewController       *viewController;
-@property (readonly,weak,nullable) UIViewController       *fromViewController;
-@property (readonly,weak         ) UIViewController       *toViewController;
-@property (readonly,assign       ) BOOL                   interactionCancelled;
+@property (nonatomic, weak, readonly          ) Stacker                *stacker;
+@property (nonatomic, weak, readonly          ) UIViewController       *viewController;
+@property (nonatomic, weak, readonly, nullable) UIViewController       *fromViewController;
+@property (nonatomic, weak, readonly          ) UIViewController       *toViewController;
+@property (nonatomic, readonly                ) BOOL                   interactionCancelled;
+@property (nonatomic, assign                  ) StackerTransitionStyle style;
 
 - (void)complete:(BOOL)finished;
 
-/// start transition
-/// @param duration duration
 - (void)startTransition:(CFTimeInterval)duration;
 
 - (void)restoreTransition;
 
+- (void)layoutView:(UIView*)view;
+
 #pragma mark
 #pragma mark -- percent driven interaction
-- (void)startInteraction:(CFTimeInterval)duration;
+- (void)startInteraction;
 - (void)updateInteraction:(CGFloat)progress;
 - (void)cancelInteraction:(CGFloat)speed;
 - (void)finishInteraction:(CGFloat)speed;
